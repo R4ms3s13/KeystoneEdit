@@ -74,6 +74,13 @@ const CreateForm = React.createClass({
 		event.preventDefault();
 		const createForm = event.target;
 		const formData = new FormData(createForm);
+		this.setState({
+			alerts: {
+				success: {
+					success: 'Decrypting Document',
+				},
+			}
+		});
 		this.props.list.createItem(formData, (err, data) => {
 			if (data) {
 				if (this.props.onCreate) {
