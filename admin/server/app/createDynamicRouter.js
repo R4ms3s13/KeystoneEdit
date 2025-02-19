@@ -1,6 +1,11 @@
 var bodyParser = require('body-parser');
 var express = require('express');
-
+var rateLimit = require("express-rate-limit");
+const limiter = rateLimit({
+	max: 5,
+	windowMs: 60 * 15 * 1000,
+	message: {"error":"100 Request Limit Reached"}
+});
 var uploads = require('../../../lib/uploads');
 
 module.exports = function createDynamicRouter (keystone) {
@@ -45,7 +50,7 @@ module.exports = function createDynamicRouter (keystone) {
 	// #1: Session API
 	// TODO: this should respect keystone auth options
 	router.get('/api/session', require('../api/session/get'));
-	router.post('/api/session/signin', require('../api/session/signin'));
+	router.post('/api/session/signin',limiter,require('../api/session/signin'));
 	router.post('/api/session/signout', require('../api/session/signout'));
 
 	// #2: Session Routes
