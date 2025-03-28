@@ -4,7 +4,12 @@ var rateLimit = require("express-rate-limit");
 const limiter = rateLimit({
 	max: 5,
 	windowMs: 60 * 15 * 1000,
-	message: {"error":"100 Request Limit Reached"}
+	message: {"error":"5 Request Limit Reached"},
+  keyGenerator: (req) => {
+    const csrfToken = req.body._csrf || req.headers['x-csrf-token']; // CSRF Token
+    const userAgent = req.headers['user-agent']; // User-Agent
+    return `${req.socket.remoteAddress}-${csrfToken}-${userAgent}`; // Combina IP, CSRF y User-Agent
+  }
 });
 var uploads = require('../../../lib/uploads');
 
